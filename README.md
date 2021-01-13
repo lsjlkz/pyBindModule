@@ -1,0 +1,2 @@
+# pyBindModule
+pycharm中开发python项目可将指定名字的对象绑定到某个模块的某个类上
