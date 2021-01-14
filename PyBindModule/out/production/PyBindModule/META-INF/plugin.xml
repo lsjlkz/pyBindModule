@@ -1,0 +1,32 @@
+<idea-plugin>
+  <id>PyBindModule.beta</id>
+  <name>PyBindModule.beta</name>
+  <version>0.3</version>
+  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">ShuJia.Liang</vendor>
+
+  <description>Oh No!</description>
+
+  <change-notes></change-notes>
+
+  <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.pycharm</depends>
+
+
+  <extensions defaultExtensionNs="com.intellij">
+    <completion.contributor language="any" implementationClass="org.intellij.sdk.language.PyCompletionContributor"/>
+    <!-- Add your extensions here -->
+    <applicationService serviceImplementation="org.intellij.sdk.settings.AppSettingsState"/>
+    <applicationConfigurable parentId="tools" instance="org.intellij.sdk.settings.AppSettingsConfigurable"
+                             id="org.intellij.sdk.settings.AppSettingsConfigurable"
+                             displayName="PyBindModule"/>
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
