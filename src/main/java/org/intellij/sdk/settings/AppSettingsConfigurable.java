@@ -49,6 +49,11 @@ public class AppSettingsConfigurable implements Configurable {
     modified |= !mySettingsComponent.getObjectSetting_8().equals(settings.myObjectSetting_8);
     modified |= !mySettingsComponent.getObjectSetting_9().equals(settings.myObjectSetting_9);
     modified |= !mySettingsComponent.getObjectSetting_10().equals(settings.myObjectSetting_10);
+    modified |= !mySettingsComponent.getObjectSetting_11().equals(settings.myObjectSetting_11);
+    modified |= !mySettingsComponent.getObjectSetting_12().equals(settings.myObjectSetting_12);
+    modified |= !mySettingsComponent.getObjectSetting_13().equals(settings.myObjectSetting_13);
+    modified |= !mySettingsComponent.getObjectSetting_14().equals(settings.myObjectSetting_14);
+    modified |= !mySettingsComponent.getObjectSetting_15().equals(settings.myObjectSetting_15);
     return modified;
   }
 
@@ -65,6 +70,11 @@ public class AppSettingsConfigurable implements Configurable {
     settings.myObjectSetting_8 = mySettingsComponent.getObjectSetting_8();
     settings.myObjectSetting_9 = mySettingsComponent.getObjectSetting_9();
     settings.myObjectSetting_10 = mySettingsComponent.getObjectSetting_10();
+    settings.myObjectSetting_11 = mySettingsComponent.getObjectSetting_11();
+    settings.myObjectSetting_12 = mySettingsComponent.getObjectSetting_12();
+    settings.myObjectSetting_13 = mySettingsComponent.getObjectSetting_13();
+    settings.myObjectSetting_14 = mySettingsComponent.getObjectSetting_14();
+    settings.myObjectSetting_15 = mySettingsComponent.getObjectSetting_15();
   }
 
   @Override
@@ -80,6 +90,11 @@ public class AppSettingsConfigurable implements Configurable {
     mySettingsComponent.setObjectSetting_8(settings.myObjectSetting_8);
     mySettingsComponent.setObjectSetting_9(settings.myObjectSetting_9);
     mySettingsComponent.setObjectSetting_10(settings.myObjectSetting_10);
+    mySettingsComponent.setObjectSetting_11(settings.myObjectSetting_11);
+    mySettingsComponent.setObjectSetting_12(settings.myObjectSetting_12);
+    mySettingsComponent.setObjectSetting_13(settings.myObjectSetting_13);
+    mySettingsComponent.setObjectSetting_14(settings.myObjectSetting_14);
+    mySettingsComponent.setObjectSetting_15(settings.myObjectSetting_15);
   }
 
   @Override

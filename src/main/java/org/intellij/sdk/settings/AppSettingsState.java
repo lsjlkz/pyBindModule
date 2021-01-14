@@ -20,16 +20,21 @@ import org.jetbrains.annotations.Nullable;
         storages = {@Storage("SdkSettingsPlugin.xml")}
 )
 public class AppSettingsState implements PersistentStateComponent<AppSettingsState> {
-  public String myObjectSetting_1 = "role;Develop/PyHelp/C/cRoleClass.py;cRoleClass;false;2";
-  public String myObjectSetting_2 = "union;Develop/PyCode/Logic/Game/Union/UnionClass/UnionClass.py;UnionClass;false;0";
-  public String myObjectSetting_3 = "hero;Develop/PyCode/Logic/Game/Hero/HeroClass.py;HeroClass;false;0";
-  public String myObjectSetting_4 = "bag;Develop/PyCode/Logic/Game/Bag/BagClass.py;SimpleBag;false;0";
-  public String myObjectSetting_5 = "";
+  public String myObjectSetting_1 = "role;Develop/PyHelp/C/cRoleClass.py;cRoleClass;false;2;!Client";
+  public String myObjectSetting_2 = "union;Develop/PyCode/Logic/Game/Union/UnionClass/UnionClass.py;UnionClass;false;0;!Client";
+  public String myObjectSetting_3 = "hero;Develop/PyCode/Logic/Game/Hero/HeroClass.py;HeroClass;false;0;!Client";
+  public String myObjectSetting_4 = "bag;Develop/PyCode/Logic/Game/Bag/BagClass.py;SimpleBag;false;0;!Client";
+  public String myObjectSetting_5 = "role;Develop/PyCode/Client/Game/Role/ClientRole.py;PyRole;false;0;Client";
   public String myObjectSetting_6 = "";
   public String myObjectSetting_7 = "";
   public String myObjectSetting_8 = "";
   public String myObjectSetting_9 = "";
   public String myObjectSetting_10 = "";
+  public String myObjectSetting_11 = "";
+  public String myObjectSetting_12 = "";
+  public String myObjectSetting_13 = "";
+  public String myObjectSetting_14 = "";
+  public String myObjectSetting_15 = "";
 
   public static AppSettingsState getInstance() {
     return ServiceManager.getService(AppSettingsState.class);

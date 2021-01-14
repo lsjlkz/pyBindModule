@@ -1,21 +1,18 @@
 package org.intellij.sdk.language;
 
 import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.util.ProcessingContext;
-import org.apache.commons.lang.StringUtils;
-import org.intellij.sdk.settings.AppSettingsComponent;
 import org.intellij.sdk.settings.AppSettingsState;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.intellij.sdk.language.CommonString.*;
@@ -26,106 +23,112 @@ public class PyCompletionContributor extends CompletionContributor {
         extend(CompletionType.BASIC, PlatformPatterns.psiElement(), new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
-                if(parameters.getOffset() < 5){
-                    System.out.println();
-                    return;
-                }
                 TextRange t = TextRange.from(parameters.getOffset() - 1, 1);
                 if(!parameters.getEditor().getDocument().getText(t).equals(DOT)){
                     return;
                 }
-                AppSettingsState settings = AppSettingsState.getInstance();
-                //String[] config = settings.myObjectSetting_1.split(":");
-                String[] config = getConfig(parameters.getEditor().getDocument(), parameters.getOffset());
-                if(config == null){
-                    //System.out.println();
-                    return;
-                }
-                String projectPath = parameters.getOriginalFile().getVirtualFile().getPresentableUrl().toString();
-                String developPath = "";
-                String cRolePath = "";
-                if(Boolean.parseBoolean(config[3])){
-                    cRolePath = config[1];
-                }else{
-                    int idx = projectPath.indexOf(DEVELOP);
-                    if(idx != -1){
-                        developPath = projectPath.substring(0, idx);
-                    }else{
-                        developPath = projectPath;
-                    }
-                    cRolePath = developPath + config[1];
-                }
-                String cRoleFilePath = cRolePath.replace("/", "\\");
-                File f = new File(cRoleFilePath);
-                if(f.canRead()){
-                    try {
-                        InputStreamReader reader = new InputStreamReader(new FileInputStream(f), Charset.forName("UTF-8"));
-                        BufferedReader bufferedReader = new BufferedReader(reader);
-                        String line = "";
-                        line = bufferedReader.readLine();
-                        int lineIdx = -1;
-                        int lastFuncIdx = 10000;
-                        String lastFuncName = "";
-                        boolean flag = false;
-                        while (line != null) {
-                            //System.out.println();
-                            lineIdx ++;
-                            line = bufferedReader.readLine();
-                            if(line == null){
-                                //System.out.println();
-                                break;
-                            }
-                            if(line.indexOf(CLASS)!= -1){
-                                if(flag){
-                                    //System.out.println();
-                                    break;
-                                }else{
-                                    int idx_l = line.indexOf(CLASS);
-                                    int idx_r = line.indexOf(LEFT);
-                                    if(line.substring(idx_l + CLASS.length() + 1, idx_r).equals(config[2])){
-                                        //System.out.println();
-                                        flag = true;
-                                    }
-                                }
-                            }
-                            if(!flag){
-                                //System.out.println();
-                                continue;
-                            }
-                            String funcName = "";
-                            if(line.indexOf(DEF) != -1){
-                                funcName = getDef(line);
-                                //System.out.println();
-                                if(funcName == null){
-                                    continue;
-                                }
-                                //System.out.println();
-                                lastFuncName = funcName;
-                                lastFuncIdx = lineIdx;
-                            }
-                            if(lineIdx != lastFuncIdx + Integer.parseInt(config[4])){
-                                //System.out.println();
-                                continue;
-                            }
-                            //System.out.println();
-                            //System.out.println(funcName);
-                            result.addElement(LookupElementBuilder.create(lastFuncName).withTypeText(line));
-                        }
-                    } catch (IOException e) {
-                        //System.out.println();
-                        e.printStackTrace();
-                    }
-                }
+                process(parameters, result);
             }
         });
     }
-    private String getDef(String line){
-        int defIdx = line.indexOf(DEF);
+
+    private void process(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
+        ArrayList<String[]> config_array = getConfig(parameters);
+        for(String[] config:config_array) {
+            if(config == null){
+                return;
+            }
+            String projectPath = parameters.getOriginalFile().getVirtualFile().getPresentableUrl().toString();
+            String developPath = "";
+            String cRolePath = "";
+            if(Boolean.parseBoolean(config[3])){
+                cRolePath = config[1];
+            }else{
+                int idx = projectPath.indexOf(DEVELOP);
+                if(idx != -1){
+                    developPath = projectPath.substring(0, idx);
+                }else{
+                    developPath = projectPath;
+                }
+                cRolePath = developPath + config[1];
+            }
+            String cRoleFilePath = cRolePath.replace("/", "\\");
+            File f = new File(cRoleFilePath);
+            ArrayList<String[]> ele = new ArrayList<String[]>();
+            String lastFuncName = "";
+            String line = "";
+            int offSet = Integer.parseInt(config[4]);
+            if(f.canRead()){
+                try {
+                    InputStreamReader reader = new InputStreamReader(new FileInputStream(f), Charset.forName("UTF-8"));
+                    BufferedReader bufferedReader = new BufferedReader(reader);
+                    line = bufferedReader.readLine();
+                    int lineIdx = -1;
+                    int lastFuncIdx = 10000;
+                    boolean flag = false;
+                    int t = 0;
+                    while (line != null) {
+                        lineIdx ++;
+                        line = bufferedReader.readLine();
+                        if(line == null){
+                            break;
+                        }
+                        if(line.contains(CLASS)){
+                            if(flag){
+                                break;
+                            }else{
+                                int idx_l = line.indexOf(CLASS);
+                                int idx_r = line.indexOf(LEFT);
+                                if(line.substring(idx_l + CLASS.length() + 1, idx_r).equals(config[2])){
+                                    flag = true;
+                                }
+                            }
+                        }
+                        if(!flag){
+                            continue;
+                        }
+                        String funcName = "";
+                        if(line.contains(DEF)){
+                            if(t == 0){
+                                t = line.indexOf(DEF);
+                            }else if(t != line.indexOf(DEF)){
+                                break;
+                            }
+                            funcName = getDef(line, t);
+                            if(funcName == null || funcName.startsWith(UNDER)){
+                                continue;
+                            }
+                            lastFuncName = funcName;
+                            lastFuncIdx = lineIdx;
+                        }
+                        if(lineIdx != lastFuncIdx + offSet){
+                            continue;
+                        }
+                        ele.add(new String[]{lastFuncName, line});
+                        lastFuncName = "";
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            for(String[] e:ele){
+                result.addElement(LookupElementBuilder.create(e[0]).withTypeText(e[1]));
+            }
+            if(!lastFuncName.isEmpty()){
+                result.addElement(LookupElementBuilder.create(lastFuncName));
+            }
+        }
+    }
+
+    private String getDef(String line, int defIdx){
         int idx = line.indexOf(LEFT);
         return line.substring(defIdx + 4, idx).concat(LEFT + RIGHT);
     }
 
-    private String[] getConfig(Document input, int offset){
+    private ArrayList<String[]> getConfig(@NotNull CompletionParameters parameters){
+        ArrayList<String[]> res = new ArrayList<String[]>();
+        Document input = parameters.getEditor().getDocument();
+        int offset = parameters.getOffset();
         AppSettingsState settings = AppSettingsState.getInstance();
         List<String> configList = new ArrayList<String>();
         configList.add(settings.myObjectSetting_1);
@@ -138,21 +141,48 @@ public class PyCompletionContributor extends CompletionContributor {
         configList.add(settings.myObjectSetting_8);
         configList.add(settings.myObjectSetting_9);
         configList.add(settings.myObjectSetting_10);
+        configList.add(settings.myObjectSetting_11);
+        configList.add(settings.myObjectSetting_12);
+        configList.add(settings.myObjectSetting_13);
+        configList.add(settings.myObjectSetting_14);
+        configList.add(settings.myObjectSetting_15);
         for(String config: configList) {
-            if (config.equals("")) {
+            if (config.isEmpty()) {
                 continue;
-            } else {
-                String[] tmp;
-                tmp = config.split(SEPARATOR);
-                TextRange t = TextRange.from(offset - (tmp[0].length() + 1), tmp[0].length() + 1);
-                if (!input.getText(t).equals(tmp[0] + DOT)) {
+            }
+            String[] tmp;
+            tmp = config.split(SEPARATOR);
+            if(tmp.length > 5){
+                String path = parameters.getOriginalFile().getVirtualFile().getPresentableUrl().toString();
+                if(!canAddToRes(path, tmp[5])){
                     continue;
-                } else {
-                    return tmp;
                 }
             }
+            if(offset - 1 < tmp[0].length()){
+                continue;
+            }
+            TextRange t = TextRange.from(offset - (tmp[0].length() + 1), tmp[0].length());
+            if (!input.getText(t).equals(tmp[0])) {
+                continue;
+            }
+            res.add(tmp);
         }
-        return null;
+        return res;
+    }
+
+    private boolean canAddToRes(String path, String s) {
+        String[] con;
+        con = s.split(COMMA);
+        for(String c: con){
+            if(c.startsWith(EXC) && path.contains(c.substring(1, c.length()))){
+                // not include
+                return false;
+            }else if(!c.startsWith(EXC) && !path.contains(c)){
+                // should include
+                return false;
+            }
+        }
+        return true;
     }
 }
 

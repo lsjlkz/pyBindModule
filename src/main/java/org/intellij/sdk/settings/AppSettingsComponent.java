@@ -26,6 +26,11 @@ public class AppSettingsComponent {
   private final JBTextField myObjectSetting_8 = new JBTextField();
   private final JBTextField myObjectSetting_9 = new JBTextField();
   private final JBTextField myObjectSetting_10 = new JBTextField();
+  private final JBTextField myObjectSetting_11 = new JBTextField();
+  private final JBTextField myObjectSetting_12 = new JBTextField();
+  private final JBTextField myObjectSetting_13 = new JBTextField();
+  private final JBTextField myObjectSetting_14 = new JBTextField();
+  private final JBTextField myObjectSetting_15 = new JBTextField();
 
   public AppSettingsComponent() {
     myMainPanel = FormBuilder.createFormBuilder()
@@ -40,6 +45,11 @@ public class AppSettingsComponent {
             .addLabeledComponent(new JBLabel("绑定8"), myObjectSetting_8, 1, false)
             .addLabeledComponent(new JBLabel("绑定9"), myObjectSetting_9, 1, false)
             .addLabeledComponent(new JBLabel("绑定10"), myObjectSetting_10, 1, false)
+            .addLabeledComponent(new JBLabel("绑定11"), myObjectSetting_11, 1, false)
+            .addLabeledComponent(new JBLabel("绑定12"), myObjectSetting_12, 1, false)
+            .addLabeledComponent(new JBLabel("绑定13"), myObjectSetting_13, 1, false)
+            .addLabeledComponent(new JBLabel("绑定14"), myObjectSetting_14, 1, false)
+            .addLabeledComponent(new JBLabel("绑定15"), myObjectSetting_15, 1, false)
             .addComponentFillVertically(new JPanel(), 0)
             .getPanel();
   }
@@ -140,6 +150,51 @@ public class AppSettingsComponent {
 
   public void setObjectSetting_10(@NotNull String newText) {
     myObjectSetting_10.setText(newText);
+  }
+
+  @NotNull
+  public String getObjectSetting_11() {
+    return myObjectSetting_11.getText();
+  }
+
+  public void setObjectSetting_11(@NotNull String newText) {
+    myObjectSetting_11.setText(newText);
+  }
+
+  @NotNull
+  public String getObjectSetting_12() {
+    return myObjectSetting_12.getText();
+  }
+
+  public void setObjectSetting_12(@NotNull String newText) {
+    myObjectSetting_12.setText(newText);
+  }
+
+  @NotNull
+  public String getObjectSetting_13() {
+    return myObjectSetting_13.getText();
+  }
+
+  public void setObjectSetting_13(@NotNull String newText) {
+    myObjectSetting_13.setText(newText);
+  }
+
+  @NotNull
+  public String getObjectSetting_14() {
+    return myObjectSetting_14.getText();
+  }
+
+  public void setObjectSetting_14(@NotNull String newText) {
+    myObjectSetting_14.setText(newText);
+  }
+
+  @NotNull
+  public String getObjectSetting_15() {
+    return myObjectSetting_15.getText();
+  }
+
+  public void setObjectSetting_15(@NotNull String newText) {
+    myObjectSetting_15.setText(newText);
   }
 
 }
